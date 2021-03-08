@@ -14,7 +14,7 @@ from _ast import Attribute
 
 _LOGGER = logging.getLogger(__name__)
 
-SCAN_INTERVAL = timedelta(seconds=60)
+SCAN_INTERVAL = timedelta(seconds=600)
 
 ATTR_SN = 'SN'
 ATTR_LOCATION = 'Location'
