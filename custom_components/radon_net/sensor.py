@@ -178,6 +178,11 @@ class RadonNetSensor(Entity):
         except:
             _LOGGER.debug('call_service error')
             return None
+    
+    @property
+    def unique_id(self):
+        """Return the unique ID."""
+        return 'sensor.{}'.format(self._name.replace(' ', '_').lower())
 
     @property
     def name(self):
