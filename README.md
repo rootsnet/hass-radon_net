@@ -1,4 +1,4 @@
-# hass-radon_net
+# Radon Net Sensor
 
 Home Assistant integration for Radon-Net. 
 
