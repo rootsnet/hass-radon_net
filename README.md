@@ -4,7 +4,7 @@ This will work with RadonEye Wi-Fi models(eg: RadonEye Plus 2)
 
 ## Installation
 
-### Step 1: Install Custom Components
+### Step 1: Install Custom Component
 
 Copy the radon_net directory into the custom_components folder
 
