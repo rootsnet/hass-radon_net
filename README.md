@@ -5,6 +5,8 @@ Home Assistant integration for Radon-Net.
 
 ### Step 1: Install Custom Components
 
+Copy the radon_net directory into the custom_components folder
+
 ### Step 2: Configure
 
 Example configuration.yaml entry:
