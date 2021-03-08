@@ -1,5 +1,6 @@
 # hass-radon_net
 Home Assistant integration for Radon-Net.
+This will work with RadonEye Wi-Fi models(eg: RadonEye Plus 2)
 
 ## Installation
 
