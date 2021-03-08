@@ -1,0 +1,5 @@
+{
+  "name": "Radon Net Sensor",
+  "domains": ["sensor"],
+  "render_readme": true
+}
