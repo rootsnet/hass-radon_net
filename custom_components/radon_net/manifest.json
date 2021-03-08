@@ -1,0 +1,11 @@
+{
+  "domain": "radon_net",
+  "name": "Radon Net",
+  "documentation": "https://github.com/rootsnet/hass-radon_net/",
+  "dependencies": [],
+  "codeowners": [
+    "@낭만늑대"
+  ],
+  "requirements": [],
+  "version": "0.1.0"
+}
