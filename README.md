@@ -21,7 +21,7 @@ sensor:
 ```
 
 |               | Required |     Default      |        Options          |
-| ------------- |:--------:|:----------------:|:-----------------------:|
+| ------------- |:--------:|:----------------:| ----------------------- |
 | name          |     X    | Radon Net Sensor | As a name you want      |
 | username      |     O    |                  |                         |
 | password      |     O    |                  |                         |
