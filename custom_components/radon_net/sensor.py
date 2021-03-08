@@ -69,6 +69,7 @@ class RadonNetSensor(Entity):
         self._token = None
         self._id = None
         self._measurement = measurement
+        self._icon = 'mdi:radioactive'
         self._radon_bq = None
         self._radon_pci = None
         self._sn = None
@@ -183,6 +184,11 @@ class RadonNetSensor(Entity):
     def unique_id(self):
         """Return the unique ID."""
         return 'sensor.{}'.format(self._name.replace(' ', '_').lower())
+
+    @property
+    def icon(self):
+        """Return the Icon to use in the frontend."""
+        return self._icon
 
     @property
     def name(self):
