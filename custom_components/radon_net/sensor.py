@@ -14,7 +14,7 @@ from _ast import Attribute
 
 _LOGGER = logging.getLogger(__name__)
 
-SCAN_INTERVAL = timedelta(seconds=600)
+SCAN_INTERVAL = timedelta(seconds=60)
 
 ATTR_SN = 'SN'
 ATTR_LOCATION = 'Location'
@@ -31,8 +31,8 @@ ATTR_DAYS7_AVG_VALUE = 'Avg. 7days'
 ATTR_DAYS30_AVG_VALUE = 'Avg. 30days'
 ATTR_DAYS90_AVG_VALUE = 'Avg. 90days'
 
-RADONNET_TOKEN_URL='https://radon-net.com/api/auth/signin'
-RADONNET_SENSOR_URL = 'https://radon-net.com/api/users/devices?user_id={}'
+RADONNET_TOKEN_URL='https://ftlab-vm-api.com/api/rmns/users/Login'
+RADONNET_SENSOR_URL = 'https://ftlab-vm-api.com/api/rmns/devices?User_ID={}'
 
 CONF_USERNAME = 'username'
 CONF_PASSWORD = "password"
@@ -68,6 +68,7 @@ class RadonNetSensor(Entity):
         self._name = name
         self._token = None
         self._id = None
+#        self._unit_of_measurement = None
         self._measurement = measurement
         self._icon = 'mdi:radioactive'
         self._radon_bq = None
@@ -88,9 +89,12 @@ class RadonNetSensor(Entity):
     
     def get_session_info(self, session_info):
         header = {
-        'X-Requested-With': 'XMLHttpRequest'
+        'Sec-Fetch-Dest': 'empty',
+        'Content-Type': 'application/json',
+        'Accept': 'text/plain, */*; q=0.01',
+        'Accept-Encoding': 'gzip, deflate, br'
         }
-        data = {'email': self._username, 'password': self._password}
+        data = '{"E_Mail": "' + self._username + '","PW": "' + self._password + '"}'
         try:
             response = requests.post(RADONNET_TOKEN_URL, headers=header, data=data)
             result = response.json()
@@ -98,7 +102,6 @@ class RadonNetSensor(Entity):
             message = result.get('success')
             if message is None:
                 return result.get(session_info)
-                return None
             elif message == False:
                 _LOGGER.debug('Failed to get_session_info: message is False')
                 return None
@@ -122,8 +125,7 @@ class RadonNetSensor(Entity):
     def call_service(self, url):
         cookie = 'user_id=' + str(self._id) + '; user_email=' + self._username +'; token=' + self._token
         header = {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Cookie': cookie
+        'Sec-Fetch-Dest': 'empty'
         }
         try:
             response = requests.get(url, headers=header)
@@ -134,10 +136,12 @@ class RadonNetSensor(Entity):
                 _LOGGER.debug('ID: %s', self._id)
                 self._token = self.get_session_info('Oauth_Token')
                 _LOGGER.debug('Token: %s', self._token)
+            #_LOGGER.debug(response)
             result = response.json()
             try:
                 message = result.get('success')
             except:
+                #_LOGGER.debug('message is null')
                 message = None
                 _LOGGER.debug('result(1) of call_service: %s', result)
             if message is None:
@@ -148,8 +152,7 @@ class RadonNetSensor(Entity):
                 cookie = 'user_id=' + str(self._id) + '; user_email=' + self._username +'; token=' + self._token
                 _LOGGER.debug(cookie)
                 header = {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Cookie': cookie
+                'Sec-Fetch-Dest': 'empty'
                 }
                 response = requests.get(url, headers=header)
                 if response.status_code > 400:
@@ -159,10 +162,12 @@ class RadonNetSensor(Entity):
                     _LOGGER.debug('ID: %s', self._id)
                     self._token = self.get_session_info('Oauth_Token')
                     _LOGGER.debug('Token: %s', self._token)
+                #_LOGGER.debug(response)
                 result = response.json()
                 try:
                     message = result.get('success')
                 except:
+                    #_LOGGER.debug('message is null')
                     message = None
                     _LOGGER.debug('result(2) of call_service: %s', result)
                 if message is None:
@@ -180,6 +185,11 @@ class RadonNetSensor(Entity):
             _LOGGER.debug('call_service error')
             return None
     
+#    @property
+#    def entity_id(self):
+#        """Return the entity ID."""
+#        return 'sensor.{}'.format(self._name.replace(' ', '_').lower())
+    
     @property
     def unique_id(self):
         """Return the unique ID."""
@@ -189,7 +199,7 @@ class RadonNetSensor(Entity):
     def icon(self):
         """Return the Icon to use in the frontend."""
         return self._icon
-
+    
     @property
     def name(self):
         """Return the name of the sensor."""
@@ -221,6 +231,28 @@ class RadonNetSensor(Entity):
         data[ATTR_DAYS90_AVG_VALUE] = self._days90_avg_value
 
         return data
+    
+#    @property
+#    def state_attributes(self):
+#        """Return the optional state attributes."""
+#        data={}
+#
+#        data[ATTR_SN] = self._sn
+#        data[ATTR_LOCATION] = self._location
+#        data[ATTR_DT] = self._dt
+#        data[ATTR_TIMEZONE] = self._timezone
+#        data[ATTR_RADON_BQ] = self._radon_bq
+#        data[ATTR_RADON_PCI] = self._radon_pci
+#        data[ATTR_PROCESSTIME] = self._processtime
+#        data[ATTR_TEMP] = self._temp
+#        data[ATTR_HUMI] = self._humi
+#        data[ATTR_TODAY_AVG_VALUE] = self._today_avg_value
+#        data[ATTR_YESTERDAY_AVG_VALUE] = self._yesterday_avg_value
+#        data[ATTR_DAYS7_AVG_VALUE] = self._days7_avg_value
+#        data[ATTR_DAYS30_AVG_VALUE] = self._days30_avg_value
+#        data[ATTR_DAYS90_AVG_VALUE] = self._days90_avg_value
+#
+#        return data
 
     @property
     def unit_of_measurement(self):
